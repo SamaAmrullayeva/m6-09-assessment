@@ -1,0 +1,13 @@
+{
+  "first_name": "Your",
+  "last_name": "Name",
+  "team": "your-name",
+  "model": {
+    "framework": "yolo26",
+    "variant": "yolo26m",
+    "imgsz": 640,
+    "epochs_total": 80,
+    "tricks": ["mosaic", "mixup", "copy_paste", "cos_lr", "weight_decay", "patience"]
+  },
+  "notes": "yolo26m, 4 Week-2 techniques (strong aug + cosine LR + weight decay + early stopping), ONNX NMS-free e2e export"
+}

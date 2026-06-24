@@ -1,0 +1,28 @@
+# ── Cat Detector — Production Image ─────────────────────────────────────────
+# Base: slim Python 3.11 (no GPU, no ultralytics — onnxruntime only)
+FROM python:3.11-slim
+
+# Prevent .pyc files and enable unbuffered stdout/stderr for cleaner logs
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+# Install runtime dependencies first (cached layer unless requirements.txt changes)
+COPY container/requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy application code
+COPY container/app /app/app
+
+# Copy ONNX model
+COPY container/models /app/models
+
+# Copy student identity file (used by the 'info' subcommand)
+COPY container/STUDENT.json /app/STUDENT.json
+
+# The two expected mount points — declare them so Docker Desktop shows them
+VOLUME ["/data/input", "/data/output"]
+
+# Standardised entry point — routes to 'info' or 'predict'
+ENTRYPOINT ["python", "/app/app/cli.py"]
